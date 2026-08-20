@@ -39,7 +39,7 @@ export function validateConfirm(password: string, confirm: string): string | nul
   return null;
 }
 
-export type Errors<T extends string> = Partial<Record<T, string>>;
+export type Errors<T extends string> = Partial<Record<T, string | undefined>>;
 
 export function clean<T extends string>(errors: Errors<T>): Errors<T> {
   return Object.fromEntries(Object.entries(errors).filter(([, v]) => Boolean(v))) as Errors<T>;
