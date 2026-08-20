@@ -18,7 +18,7 @@ export const adminService = {
     return getDb().users.map(publicUser);
   },
 
-  async getUserById(id: string): Promise<{ user: User; storeRating: number | null; storeName?: string }> {
+  async getUserById(id: string): Promise<{ user: User; storeRating: number | null; storeName?: string | undefined }> {
     await delay();
     const db = getDb();
     const found = db.users.find((u) => u.id === id);
