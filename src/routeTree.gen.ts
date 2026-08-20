@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as AdminAddStoreRouteImport } from './routes/admin.add-store'
+import { Route as AdminAddUserRouteImport } from './routes/admin.add-user'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
 import { Route as AdminStoresRouteImport } from './routes/admin.stores'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
@@ -30,6 +32,16 @@ const LoginRoute = LoginRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAddStoreRoute = AdminAddStoreRouteImport.update({
+  id: '/admin/add-store',
+  path: '/admin/add-store',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAddUserRoute = AdminAddUserRouteImport.update({
+  id: '/admin/add-user',
+  path: '/admin/add-user',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
@@ -57,6 +69,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin/add-store': typeof AdminAddStoreRoute
+  '/admin/add-user': typeof AdminAddUserRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/stores': typeof AdminStoresRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
@@ -66,6 +80,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin/add-store': typeof AdminAddStoreRoute
+  '/admin/add-user': typeof AdminAddUserRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/stores': typeof AdminStoresRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
@@ -76,6 +92,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin/add-store': typeof AdminAddStoreRoute
+  '/admin/add-user': typeof AdminAddUserRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/stores': typeof AdminStoresRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
@@ -87,6 +105,8 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
+    | '/admin/add-store'
+    | '/admin/add-user'
     | '/admin/dashboard'
     | '/admin/stores'
     | '/admin/users'
@@ -96,6 +116,8 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
+    | '/admin/add-store'
+    | '/admin/add-user'
     | '/admin/dashboard'
     | '/admin/stores'
     | '/admin/users'
@@ -105,6 +127,8 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
+    | '/admin/add-store'
+    | '/admin/add-user'
     | '/admin/dashboard'
     | '/admin/stores'
     | '/admin/users'
@@ -115,6 +139,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  AdminAddStoreRoute: typeof AdminAddStoreRoute
+  AdminAddUserRoute: typeof AdminAddUserRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminStoresRoute: typeof AdminStoresRoute
   AdminUsersRoute: typeof AdminUsersRouteWithChildren
@@ -141,6 +167,20 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/add-store': {
+      id: '/admin/add-store'
+      path: '/admin/add-store'
+      fullPath: '/admin/add-store'
+      preLoaderRoute: typeof AdminAddStoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/add-user': {
+      id: '/admin/add-user'
+      path: '/admin/add-user'
+      fullPath: '/admin/add-user'
+      preLoaderRoute: typeof AdminAddUserRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/dashboard': {
@@ -190,6 +230,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  AdminAddStoreRoute: AdminAddStoreRoute,
+  AdminAddUserRoute: AdminAddUserRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminStoresRoute: AdminStoresRoute,
   AdminUsersRoute: AdminUsersRouteWithChildren,
