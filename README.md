@@ -10,16 +10,16 @@ A full-stack web application where users discover stores and submit star ratings
 ![Login page](docs/screenshots/Login.png)
 
 ### Admin Dashboard
-![Admin dashboard](docs/screenshots/Admin Dashboard.png)
+![Admin dashboard](docs/screenshots/A.png)
 
 ### Admin — Add Store (with new owner creation)
-![Add store form](docs/screenshots/Admin — Add Store.png)
+![Add store form](docs/screenshots/B.png)
 
 ### Normal User — Store Listing with Filters
-![Store listing](docs/screenshots/Normal User — Store Listing with Filters.png)
+![Store listing](docs/screenshots/C.png)
 
 ### Store Owner — Dashboard with Ratings & Comments
-![Owner dashboard](docs/screenshots/Store Owner — Dashboard with Ratings & Comments.png)
+![Owner dashboard](docs/screenshots/D.png)
 
 
 ---
