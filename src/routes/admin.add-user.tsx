@@ -9,9 +9,7 @@ import { FormField } from "@/components/FormField";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { adminService } from "@/services/adminService";
-import type { Role } from "@/types";
 import {
   clean,
   validateAddress,
@@ -25,9 +23,7 @@ export const Route = createFileRoute("/admin/add-user")({
   head: () => ({
     meta: [
       { title: "Add user — Store Ratings" },
-      { name: "description", content: "Create an administrator, normal user or store owner account." },
-      { property: "og:title", content: "Add user — Store Ratings" },
-      { property: "og:description", content: "Create a new platform account with a role." },
+      { name: "description", content: "Create a normal user account." },
     ],
   }),
   component: () => (
@@ -37,12 +33,12 @@ export const Route = createFileRoute("/admin/add-user")({
   ),
 });
 
-type Field = "name" | "email" | "address" | "password" | "role";
+type Field = "name" | "email" | "address" | "password" | "confirm";
 
 function AddUser() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [form, setForm] = useState({ name: "", email: "", address: "", password: "", role: "" });
+  const [form, setForm] = useState({ name: "", email: "", address: "", password: "", confirm: "" });
   const [errors, setErrors] = useState<Errors<Field>>({});
   const [saving, setSaving] = useState(false);
 
@@ -55,7 +51,12 @@ function AddUser() {
       email: validateEmail(form.email) ?? undefined,
       address: validateAddress(form.address) ?? undefined,
       password: validatePassword(form.password) ?? undefined,
-      role: form.role ? undefined : "Please select a role.",
+      confirm:
+        form.confirm === ""
+          ? "Please confirm the password."
+          : form.password !== form.confirm
+            ? "Passwords do not match."
+            : undefined,
     });
     setErrors(next);
     if (Object.keys(next).length) return;
@@ -67,10 +68,9 @@ function AddUser() {
         email: form.email,
         address: form.address,
         password: form.password,
-        role: form.role as Role,
       });
       await queryClient.invalidateQueries({ queryKey: ["admin"] });
-      toast.success("User created successfully.");
+      toast.success("User account created.");
       navigate({ to: "/admin/users" });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Unable to create this user.");
@@ -82,8 +82,8 @@ function AddUser() {
   return (
     <>
       <PageHeader
-        title="Add user"
-        description="Create an account and assign its role."
+        title="Add normal user"
+        description="Create a standard user account. Role is set to Normal User automatically."
         actions={
           <Button asChild variant="outline">
             <Link to="/admin/users">
@@ -98,13 +98,15 @@ function AddUser() {
           label="Full name"
           htmlFor="name"
           error={errors.name}
-          hint={`Between 20 and 60 characters (${form.name.trim().length}/60).`}
+          hint={`Min 20, max 60 characters (${form.name.trim().length}/60).`}
         >
           <Input id="name" value={form.name} onChange={(e) => set("name", e.target.value)} />
         </FormField>
+
         <FormField label="Email" htmlFor="email" error={errors.email}>
           <Input id="email" type="email" value={form.email} onChange={(e) => set("email", e.target.value)} />
         </FormField>
+
         <FormField
           label="Address"
           htmlFor="address"
@@ -113,6 +115,7 @@ function AddUser() {
         >
           <Textarea id="address" rows={3} value={form.address} onChange={(e) => set("address", e.target.value)} />
         </FormField>
+
         <div className="grid gap-4 sm:grid-cols-2">
           <FormField
             label="Password"
@@ -127,19 +130,22 @@ function AddUser() {
               onChange={(e) => set("password", e.target.value)}
             />
           </FormField>
-          <FormField label="Role" htmlFor="role" error={errors.role}>
-            <Select value={form.role} onValueChange={(v) => set("role", v)}>
-              <SelectTrigger id="role">
-                <SelectValue placeholder="Select a role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ADMIN">Administrator</SelectItem>
-                <SelectItem value="USER">Normal user</SelectItem>
-                <SelectItem value="OWNER">Store owner</SelectItem>
-              </SelectContent>
-            </Select>
+
+          <FormField label="Confirm password" htmlFor="confirm" error={errors.confirm}>
+            <Input
+              id="confirm"
+              type="password"
+              value={form.confirm}
+              onChange={(e) => set("confirm", e.target.value)}
+            />
           </FormField>
         </div>
+
+        <div className="rounded-lg border border-border bg-secondary/40 px-4 py-3 text-sm text-muted-foreground">
+          The new account will have the <strong>Normal User</strong> role and will be able to
+          browse stores and submit ratings after their first login.
+        </div>
+
         <Button type="submit" disabled={saving}>
           {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {saving ? "Creating…" : "Create user"}

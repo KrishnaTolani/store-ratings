@@ -1,9 +1,15 @@
 import { useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { LogOut, Menu, Store as StoreIcon, X } from "lucide-react";
+import { ChevronDown, LogOut, Menu, Store as StoreIcon, UserRound, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { Role } from "@/types";
 
@@ -13,21 +19,17 @@ const NAV: Record<Role, Array<{ to: string; label: string }>> = {
     { to: "/admin/users", label: "Users" },
     { to: "/admin/stores", label: "Stores" },
   ],
-  USER: [
-    { to: "/user/stores", label: "Stores" },
-    { to: "/user/update-password", label: "Password" },
-  ],
+  USER: [{ to: "/user/stores", label: "Stores" }],
   OWNER: [
     { to: "/owner/dashboard", label: "Dashboard" },
-    { to: "/owner/update-password", label: "Password" },
+    { to: "/profile", label: "My Profile" },
   ],
 };
 
-const roleLabel: Record<Role, string> = {
-  ADMIN: "Administrator",
-  USER: "Normal user",
-  OWNER: "Store owner",
-};
+function shortName(name: string) {
+  const parts = name.trim().split(/\s+/);
+  return parts.slice(0, 2).join(" ");
+}
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const { user, logout } = useAuth();
@@ -42,11 +44,38 @@ export function AppLayout({ children }: { children: ReactNode }) {
     navigate({ to: "/login", replace: true });
   };
 
+  const accountMenu = user ? (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex max-w-[220px] items-center gap-1 rounded-lg px-2 py-1.5 text-sm font-semibold transition-colors hover:bg-secondary"
+        >
+          <span className="truncate">{shortName(user.name)}</span>
+          <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-52">
+        <DropdownMenuLabel className="font-normal text-muted-foreground">Account</DropdownMenuLabel>
+        {user.role === "USER" && (
+          <DropdownMenuItem onClick={() => navigate({ to: "/profile" })}>
+            <UserRound className="mr-2 h-4 w-4" />
+            My profile
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuItem onClick={handleLogout}>
+          <LogOut className="mr-2 h-4 w-4" />
+          Logout
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ) : null;
+
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-40 border-b border-border bg-surface/85 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-          <div className="flex items-center gap-6">
+          <div className="flex min-w-0 items-center gap-6">
             <Link to="/" className="flex items-center gap-2.5">
               <span className="brand-gradient flex h-9 w-9 items-center justify-center rounded-xl shadow-float">
                 <StoreIcon className="h-4.5 w-4.5 text-primary-foreground" />
@@ -60,7 +89,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
                   to={item.to}
                   className={cn(
                     "rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground",
-                    pathname.startsWith(item.to) && "bg-secondary text-foreground",
+                    (item.to === "/profile" ? pathname === item.to : pathname.startsWith(item.to)) &&
+                    "bg-secondary text-foreground",
                   )}
                 >
                   {item.label}
@@ -69,21 +99,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
             </nav>
           </div>
 
-          <div className="flex items-center gap-3">
-            {user && (
-              <div className="hidden text-right sm:block">
-                <p className="max-w-[180px] truncate text-sm font-semibold">{user.name}</p>
-                <p className="text-xs text-muted-foreground">{roleLabel[user.role]}</p>
-              </div>
-            )}
-            {user && (
-              <Badge variant="secondary" className="hidden lg:inline-flex">
-                {user.email}
-              </Badge>
-            )}
-            <Button variant="outline" size="sm" onClick={handleLogout} className="hidden sm:inline-flex">
-              <LogOut className="mr-1.5 h-4 w-4" /> Logout
-            </Button>
+          <div className="flex items-center gap-1">
+            {accountMenu}
             <Button
               variant="ghost"
               size="icon"
@@ -109,9 +126,25 @@ export function AppLayout({ children }: { children: ReactNode }) {
                   {item.label}
                 </Link>
               ))}
-              <Button variant="outline" size="sm" className="mt-2 justify-start" onClick={handleLogout}>
-                <LogOut className="mr-1.5 h-4 w-4" /> Logout
-              </Button>
+              {user?.role === "USER" && (
+                <button
+                  type="button"
+                  className="rounded-lg px-3 py-2 text-left text-sm font-medium hover:bg-secondary"
+                  onClick={() => {
+                    setOpen(false);
+                    navigate({ to: "/profile" });
+                  }}
+                >
+                  My profile
+                </button>
+              )}
+              <button
+                type="button"
+                className="rounded-lg px-3 py-2 text-left text-sm font-medium text-destructive hover:bg-secondary"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
             </nav>
           </div>
         )}

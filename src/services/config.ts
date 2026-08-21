@@ -1,13 +1,7 @@
 export const API_BASE_URL =
   (import.meta.env["VITE_API_URL"] as string | undefined) || "http://localhost:5000/api";
 
-/** Flip to false once real REST endpoints are available. */
-export const USE_MOCK_API = true;
-
-/** Simulated network latency for the mock layer (ms). */
-export const MOCK_LATENCY = 350;
-
-export const delay = (ms: number = MOCK_LATENCY) => new Promise((r) => setTimeout(r, ms));
+export const SESSION_KEY = "store-ratings.session.v1";
 
 export class ApiError extends Error {
   status: number;
@@ -17,15 +11,47 @@ export class ApiError extends Error {
   }
 }
 
-/**
- * Thin fetch wrapper — pages never call this directly, only services do.
- * Replace mock bodies in the services with `request<T>(...)` calls.
- */
+function authHeader(): Record<string, string> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.localStorage.getItem(SESSION_KEY);
+    if (!raw) return {};
+    const token = (JSON.parse(raw) as { token?: string }).token;
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  } catch {
+    return {};
+  }
+}
+
 export async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE_URL}${path}`, {
-    headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader(),
+      ...(init?.headers ?? {}),
+    },
   });
-  if (!res.ok) throw new ApiError(await res.text().catch(() => res.statusText), res.status);
-  return (await res.json()) as T;
+
+  const text = await res.text();
+  let body: unknown = null;
+  if (text) {
+    try {
+      body = JSON.parse(text);
+    } catch {
+      body = text;
+    }
+  }
+
+  if (!res.ok) {
+    const message =
+      typeof body === "object" && body && "message" in body
+        ? String((body as { message: string }).message)
+        : typeof body === "string" && body
+          ? body
+          : res.statusText;
+    throw new ApiError(message, res.status);
+  }
+
+  return body as T;
 }

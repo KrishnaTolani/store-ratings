@@ -6,17 +6,23 @@ import { AppLayout } from "@/layouts/AppLayout";
 import { roleHome } from "@/services/mockDb";
 import type { Role } from "@/types";
 
-export function ProtectedRoute({ role, children }: { role: Role; children: ReactNode }) {
+export function ProtectedRoute({
+  role,
+  children,
+}: {
+  role?: Role;
+  children: ReactNode;
+}) {
   const { user, ready } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!ready) return;
     if (!user) navigate({ to: "/login", replace: true });
-    else if (user.role !== role) navigate({ to: roleHome[user.role], replace: true });
+    else if (role && user.role !== role) navigate({ to: roleHome[user.role], replace: true });
   }, [ready, user, role, navigate]);
 
-  if (!ready || !user || user.role !== role) {
+  if (!ready || !user || (role && user.role !== role)) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />

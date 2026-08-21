@@ -42,7 +42,7 @@ export function UpdatePasswordForm() {
   };
 
   return (
-    <form onSubmit={submit} className="surface-card max-w-lg space-y-4 p-6" noValidate>
+    <form onSubmit={submit} className="surface-card w-full space-y-4 p-6" noValidate>
       <FormField label="Current password" htmlFor="current" error={errors.current}>
         <Input
           id="current"

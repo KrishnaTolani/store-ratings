@@ -11,13 +11,19 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AdminAddStoreRouteImport } from './routes/admin.add-store'
 import { Route as AdminAddUserRouteImport } from './routes/admin.add-user'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
 import { Route as AdminStoresRouteImport } from './routes/admin.stores'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as OwnerDashboardRouteImport } from './routes/owner.dashboard'
+import { Route as OwnerUpdatePasswordRouteImport } from './routes/owner.update-password'
+import { Route as UserStoresRouteImport } from './routes/user.stores'
+import { Route as UserUpdatePasswordRouteImport } from './routes/user.update-password'
 import { Route as AdminUsersIdRouteImport } from './routes/admin.users.$id'
+import { Route as UserStoresStoreIdRouteImport } from './routes/user.stores_.$storeId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -27,6 +33,11 @@ const IndexRoute = IndexRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignupRoute = SignupRouteImport.update({
@@ -59,91 +70,158 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/admin/users',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OwnerDashboardRoute = OwnerDashboardRouteImport.update({
+  id: '/owner/dashboard',
+  path: '/owner/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OwnerUpdatePasswordRoute = OwnerUpdatePasswordRouteImport.update({
+  id: '/owner/update-password',
+  path: '/owner/update-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserStoresRoute = UserStoresRouteImport.update({
+  id: '/user/stores',
+  path: '/user/stores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserUpdatePasswordRoute = UserUpdatePasswordRouteImport.update({
+  id: '/user/update-password',
+  path: '/user/update-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminUsersIdRoute = AdminUsersIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => AdminUsersRoute,
 } as any)
+const UserStoresStoreIdRoute = UserStoresStoreIdRouteImport.update({
+  id: '/user/stores_/$storeId',
+  path: '/user/stores/$storeId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/admin/add-store': typeof AdminAddStoreRoute
   '/admin/add-user': typeof AdminAddUserRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/stores': typeof AdminStoresRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
+  '/owner/dashboard': typeof OwnerDashboardRoute
+  '/owner/update-password': typeof OwnerUpdatePasswordRoute
+  '/user/stores': typeof UserStoresRoute
+  '/user/update-password': typeof UserUpdatePasswordRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
+  '/user/stores/$storeId': typeof UserStoresStoreIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/admin/add-store': typeof AdminAddStoreRoute
   '/admin/add-user': typeof AdminAddUserRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/stores': typeof AdminStoresRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
+  '/owner/dashboard': typeof OwnerDashboardRoute
+  '/owner/update-password': typeof OwnerUpdatePasswordRoute
+  '/user/stores': typeof UserStoresRoute
+  '/user/update-password': typeof UserUpdatePasswordRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
+  '/user/stores/$storeId': typeof UserStoresStoreIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/admin/add-store': typeof AdminAddStoreRoute
   '/admin/add-user': typeof AdminAddUserRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/stores': typeof AdminStoresRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
+  '/owner/dashboard': typeof OwnerDashboardRoute
+  '/owner/update-password': typeof OwnerUpdatePasswordRoute
+  '/user/stores': typeof UserStoresRoute
+  '/user/update-password': typeof UserUpdatePasswordRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
+  '/user/stores_/$storeId': typeof UserStoresStoreIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/login'
+    | '/profile'
     | '/signup'
     | '/admin/add-store'
     | '/admin/add-user'
     | '/admin/dashboard'
     | '/admin/stores'
     | '/admin/users'
+    | '/owner/dashboard'
+    | '/owner/update-password'
+    | '/user/stores'
+    | '/user/update-password'
     | '/admin/users/$id'
+    | '/user/stores/$storeId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
+    | '/profile'
     | '/signup'
     | '/admin/add-store'
     | '/admin/add-user'
     | '/admin/dashboard'
     | '/admin/stores'
     | '/admin/users'
+    | '/owner/dashboard'
+    | '/owner/update-password'
+    | '/user/stores'
+    | '/user/update-password'
     | '/admin/users/$id'
+    | '/user/stores/$storeId'
   id:
     | '__root__'
     | '/'
     | '/login'
+    | '/profile'
     | '/signup'
     | '/admin/add-store'
     | '/admin/add-user'
     | '/admin/dashboard'
     | '/admin/stores'
     | '/admin/users'
+    | '/owner/dashboard'
+    | '/owner/update-password'
+    | '/user/stores'
+    | '/user/update-password'
     | '/admin/users/$id'
+    | '/user/stores_/$storeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
+  ProfileRoute: typeof ProfileRoute
   SignupRoute: typeof SignupRoute
   AdminAddStoreRoute: typeof AdminAddStoreRoute
   AdminAddUserRoute: typeof AdminAddUserRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminStoresRoute: typeof AdminStoresRoute
   AdminUsersRoute: typeof AdminUsersRouteWithChildren
+  OwnerDashboardRoute: typeof OwnerDashboardRoute
+  OwnerUpdatePasswordRoute: typeof OwnerUpdatePasswordRoute
+  UserStoresRoute: typeof UserStoresRoute
+  UserUpdatePasswordRoute: typeof UserUpdatePasswordRoute
+  UserStoresStoreIdRoute: typeof UserStoresStoreIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -160,6 +238,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/signup': {
@@ -204,12 +289,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/owner/dashboard': {
+      id: '/owner/dashboard'
+      path: '/owner/dashboard'
+      fullPath: '/owner/dashboard'
+      preLoaderRoute: typeof OwnerDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/owner/update-password': {
+      id: '/owner/update-password'
+      path: '/owner/update-password'
+      fullPath: '/owner/update-password'
+      preLoaderRoute: typeof OwnerUpdatePasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/user/stores': {
+      id: '/user/stores'
+      path: '/user/stores'
+      fullPath: '/user/stores'
+      preLoaderRoute: typeof UserStoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/user/update-password': {
+      id: '/user/update-password'
+      path: '/user/update-password'
+      fullPath: '/user/update-password'
+      preLoaderRoute: typeof UserUpdatePasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/users/$id': {
       id: '/admin/users/$id'
       path: '/$id'
       fullPath: '/admin/users/$id'
       preLoaderRoute: typeof AdminUsersIdRouteImport
       parentRoute: typeof AdminUsersRoute
+    }
+    '/user/stores_/$storeId': {
+      id: '/user/stores_/$storeId'
+      path: '/user/stores/$storeId'
+      fullPath: '/user/stores/$storeId'
+      preLoaderRoute: typeof UserStoresStoreIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -229,12 +349,18 @@ const AdminUsersRouteWithChildren = AdminUsersRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
+  ProfileRoute: ProfileRoute,
   SignupRoute: SignupRoute,
   AdminAddStoreRoute: AdminAddStoreRoute,
   AdminAddUserRoute: AdminAddUserRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminStoresRoute: AdminStoresRoute,
   AdminUsersRoute: AdminUsersRouteWithChildren,
+  OwnerDashboardRoute: OwnerDashboardRoute,
+  OwnerUpdatePasswordRoute: OwnerUpdatePasswordRoute,
+  UserStoresRoute: UserStoresRoute,
+  UserUpdatePasswordRoute: UserUpdatePasswordRoute,
+  UserStoresStoreIdRoute: UserStoresStoreIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

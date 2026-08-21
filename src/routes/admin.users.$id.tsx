@@ -1,86 +1,125 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Building2 } from "lucide-react";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { PageHeader } from "@/components/PageHeader";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { RatingStars } from "@/components/RatingStars";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
 import { adminService } from "@/services/adminService";
+import type { Role } from "@/types";
+
+const roleLabel: Record<Role, string> = {
+  ADMIN: "Administrator",
+  USER: "Normal user",
+  OWNER: "Store owner",
+};
+
+const roleTone: Record<Role, string> = {
+  ADMIN: "bg-chart-1/12 text-chart-1",
+  USER: "bg-chart-2/15 text-chart-2",
+  OWNER: "bg-star/20 text-accent-foreground",
+};
 
 export const Route = createFileRoute("/admin/users/$id")({
   head: () => ({
     meta: [
-      { title: "User details — Store Ratings" },
-      { name: "description", content: "Full profile for a Store Ratings account, including store rating." },
-      { property: "og:title", content: "User details — Store Ratings" },
-      { property: "og:description", content: "Review an account's profile and store performance." },
+      { title: "User detail — Store Ratings" },
+      { name: "description", content: "View account details for a platform user." },
     ],
   }),
   component: () => (
     <ProtectedRoute role="ADMIN">
-      <UserDetail />
+      <UserDetailPage />
     </ProtectedRoute>
   ),
 });
 
-function UserDetail() {
+function UserDetailPage() {
   const { id } = Route.useParams();
-  const { data, isLoading, isError } = useQuery({
+
+  const { data, isLoading } = useQuery({
     queryKey: ["admin", "user", id],
     queryFn: () => adminService.getUserById(id),
+    enabled: Boolean(id),
   });
+
+  const user = data?.user;
 
   return (
     <>
       <PageHeader
-        title="User details"
-        description="Profile information for this account."
+        title={isLoading ? "Loading…" : (user?.name ?? "User detail")}
+        description="Account information"
         actions={
           <Button asChild variant="outline">
             <Link to="/admin/users">
-              <ArrowLeft className="mr-1.5 h-4 w-4" /> Back to users
+              <ArrowLeft className="mr-1.5 h-4 w-4" />
+              Back to users
             </Link>
           </Button>
         }
       />
 
       {isLoading ? (
-        <div className="surface-card space-y-4 p-6">
+        <div className="surface-card max-w-lg space-y-5 p-6">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-5 w-2/3" />
+            <Skeleton key={i} className="h-5 w-3/4" />
           ))}
         </div>
-      ) : isError || !data ? (
-        <div className="surface-card p-10 text-center">
-          <p className="font-medium">We couldn't find that user</p>
-          <p className="mt-1 text-sm text-muted-foreground">The account may have been removed.</p>
-        </div>
+      ) : !user ? (
+        <p className="text-sm text-muted-foreground">User not found.</p>
       ) : (
-        <div className="grid gap-4 lg:grid-cols-3">
-          <div className="surface-card p-6 lg:col-span-2">
-            <dl className="grid gap-5 sm:grid-cols-2">
-              <Item label="Name" value={data.user.name} />
-              <Item label="Email" value={data.user.email} />
-              <Item label="Address" value={data.user.address} />
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Role</dt>
-                <dd className="mt-1">
-                  <Badge variant="secondary">{data.user.role}</Badge>
-                </dd>
-              </div>
-            </dl>
+        <div className="max-w-lg space-y-6">
+          {/* Main info card */}
+          <div className="surface-card space-y-5 p-6">
+            <Field label="Name" value={user.name} />
+            <Separator />
+            <Field label="Email" value={user.email} />
+            <Separator />
+            <Field label="Address" value={user.address} />
+            <Separator />
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Role
+              </p>
+              <Badge
+                variant="secondary"
+                className={`mt-1.5 ${roleTone[user.role]}`}
+              >
+                {roleLabel[user.role]}
+              </Badge>
+            </div>
           </div>
 
-          {data.user.role === "OWNER" && (
+          {/* Store rating card — only for OWNER */}
+          {user.role === "OWNER" && (
             <div className="surface-card p-6">
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Store rating
-              </p>
-              <p className="mt-2 truncate text-sm font-medium">{data.storeName ?? "No store assigned"}</p>
-              <p className="mt-3 text-4xl font-extrabold">{(data.storeRating ?? 0).toFixed(1)}</p>
-              <RatingStars value={data.storeRating ?? 0} className="mt-2" />
+              <div className="mb-4 flex items-center gap-2">
+                <Building2 className="h-4 w-4 text-muted-foreground" />
+                <h2 className="text-sm font-semibold">Store rating</h2>
+              </div>
+
+              {data.storeRating == null ? (
+                <p className="text-sm text-muted-foreground">
+                  No store is linked to this owner account yet.
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {data.storeName && (
+                    <p className="text-sm font-medium">{data.storeName}</p>
+                  )}
+                  <div className="flex items-center gap-3">
+                    <RatingStars value={data.storeRating} size="md" />
+                    <span className="text-2xl font-extrabold tracking-tight">
+                      {data.storeRating.toFixed(1)}
+                    </span>
+                    <span className="text-sm text-muted-foreground">avg rating</span>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -89,11 +128,13 @@ function UserDetail() {
   );
 }
 
-function Item({ label, value }: { label: string; value: string }) {
+function Field({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</dt>
-      <dd className="mt-1 font-medium break-words">{value}</dd>
+      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-1 text-sm">{value || <span className="italic text-muted-foreground">—</span>}</p>
     </div>
   );
 }

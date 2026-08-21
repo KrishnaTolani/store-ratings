@@ -16,6 +16,8 @@ export interface Store {
   averageRating: number;
   ownerId: string | null;
   ratingCount?: number;
+  coverUrl?: string | null;
+  myRating?: number | null;
 }
 
 export interface Rating {
@@ -23,7 +25,26 @@ export interface Rating {
   userId: string;
   storeId: string;
   value: number;
+  comment?: string;
+  emoji?: string;
   createdAt: string;
+}
+
+export interface StoreReview {
+  id: string;
+  userId: string;
+  name: string;
+  value: number;
+  comment: string;
+  emoji: string;
+  createdAt: string;
+}
+
+export interface StoreDetail {
+  store: Store;
+  photos: string[];
+  reviews: StoreReview[];
+  myReview: { value: number; comment: string; emoji: string } | null;
 }
 
 export interface StoreWithMyRating extends Store {
@@ -44,6 +65,8 @@ export interface OwnerDashboard {
     name: string;
     email: string;
     value: number;
+    comment: string;
+    emoji: string;
     createdAt: string;
   }>;
 }
