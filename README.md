@@ -7,19 +7,19 @@ A full-stack web application where users discover stores and submit star ratings
 ## Screenshots
 
 ### Login
-![Login page](https://drive.google.com/file/d/18aZpnKfbitj9hs2pA-au4yZ9WLzFXaw6/view?usp=sharing)
+![Login page](docs/screenshots/Login.png)
 
 ### Admin Dashboard
-![Admin dashboard](https://drive.google.com/file/d/1-fe2hVi112OS1TvxF98YrEi7ZLXEuy3k/view?usp=sharing)
+![Admin dashboard](docs/screenshots/Admin Dashboard.png)
 
 ### Admin — Add Store (with new owner creation)
-![Add store form](https://drive.google.com/file/d/17cADQV45ln9eUy0csngCPoGXljRH9jlC/view?usp=sharing)
+![Add store form](docs/screenshots/Admin — Add Store.png)
 
 ### Normal User — Store Listing with Filters
-![Store listing](https://drive.google.com/file/d/1O1udB8ziXoJ5h0P0_faDFCRICrPXADA_/view?usp=sharing)
+![Store listing](docs/screenshots/Normal User — Store Listing with Filters.png)
 
 ### Store Owner — Dashboard with Ratings & Comments
-![Owner dashboard](https://drive.google.com/file/d/1gDMVXhFkwiJMh7qlBqkborQ1Ehzi8Ogk/view?usp=sharing)
+![Owner dashboard](docs/screenshots/Store Owner — Dashboard with Ratings & Comments.png)
 
 
 ---
