@@ -7,30 +7,20 @@ A full-stack web application where users discover stores and submit star ratings
 ## Screenshots
 
 ### Login
-![Login page](docs/screenshots/login.png)
+![Login page](https://drive.google.com/file/d/18aZpnKfbitj9hs2pA-au4yZ9WLzFXaw6/view?usp=sharing)
 
 ### Admin Dashboard
-![Admin dashboard](docs/screenshots/admin-dashboard.png)
-
-### Admin — Manage Users
-![Admin users list](docs/screenshots/admin-users.png)
+![Admin dashboard](https://drive.google.com/file/d/1-fe2hVi112OS1TvxF98YrEi7ZLXEuy3k/view?usp=sharing)
 
 ### Admin — Add Store (with new owner creation)
-![Add store form](docs/screenshots/admin-add-store.png)
+![Add store form](https://drive.google.com/file/d/17cADQV45ln9eUy0csngCPoGXljRH9jlC/view?usp=sharing)
 
 ### Normal User — Store Listing with Filters
-![Store listing](docs/screenshots/user-stores.png)
-
-### Normal User — Store Detail & Review Form
-![Store detail](docs/screenshots/user-store-detail.png)
+![Store listing](https://drive.google.com/file/d/1O1udB8ziXoJ5h0P0_faDFCRICrPXADA_/view?usp=sharing)
 
 ### Store Owner — Dashboard with Ratings & Comments
-![Owner dashboard](docs/screenshots/owner-dashboard.png)
+![Owner dashboard](https://drive.google.com/file/d/1gDMVXhFkwiJMh7qlBqkborQ1Ehzi8Ogk/view?usp=sharing)
 
-### My Profile — Update Password
-![Profile page](docs/screenshots/profile.png)
-
-> **To add screenshots:** take a screenshot of each page, save it as a `.png` in `docs/screenshots/` using the filenames above, then commit and push.
 
 ---
 
